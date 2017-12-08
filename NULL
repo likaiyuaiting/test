@@ -1,0 +1,13 @@
+// fng.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+#include"123.h"
+
+int main(int argc, char* argv[])
+{
+	printf("Hello World!\n");
+	printf("%d\n",sum(2,3));
+	return 0;
+}
+
