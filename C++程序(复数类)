@@ -1,0 +1,87 @@
+#include<iostream>
+using namespace std;
+
+class Complex
+{
+public:
+	Complex(double real, double image)
+		: _real(real)
+		, _image(image)
+	{}
+
+	// 成员函数
+	Complex operator+(const Complex& c)
+	{
+		Complex temp(*this);
+		temp._image = this->_image + c._image;
+		temp._real = this->_real + c._real;
+		return temp;
+	}
+
+	Complex operator-(const Complex& c)
+	{
+		Complex temp(*this);
+		temp._image = this->_image - c._image;
+		temp._real = this->_real - c._real;
+		return temp;
+	}
+
+	Complex operator*(const Complex& c)
+	{
+		Complex temp(*this);
+		temp._real = this->_real * c._real - this->_image*c._image;
+		temp._image = this->_image*c._real + this->_real*c._image;
+		return temp;
+	}
+	Complex operator/(const Complex& c)
+	{
+		Complex temp(*this);
+		temp._real = (this->_real * c._real + this->_image*c._image)/(c._image*c._image+c._image*c._image);
+		temp._image = (this->_image*c._real - this->_real*c._image) / (c._image*c._image + c._image*c._image);
+		return temp; 
+	}
+	Complex& operator+=(const Complex& c)
+	{
+		this->_real += c._real;
+		this->_image += c._image;
+		return *this;
+	}
+	Complex& operator-=(const Complex& c)
+	{
+		this->_real -= c._real;
+		this->_image -= c._image;
+		return *this;
+	}
+	Complex& operator*=(const Complex& c)
+	{
+		this->_real = this->_real * c._real - this->_image*c._image;
+		this->_image = this->_image*c._real + this->_real*c._image;
+		return *this;
+	}
+	Complex& operator/=(const Complex& c)
+	{
+		this->_real = (this->_real * c._real + this->_image*c._image) / (c._image*c._image + c._image*c._image);
+		this->_image = (this->_image*c._real - this->_real*c._image) / (c._image*c._image + c._image*c._image);
+		return *this;
+	}
+
+	// 赋值运算符
+	Complex& operator=(const Complex& c)
+	{
+		this->_real = c._real;
+		this->_image = c._image;
+		return *this;
+	}
+	bool operator==(const Complex& c)
+	{
+		return ((this->_real - c._real == 0) && (this->_image - c._image == 0)) ?true: false;
+	}
+	bool operator!=(const Complex& c)
+	{
+		return ((this->_real - c._real == 0) && (this->_image - c._image == 0)) ? false: true;
+	}
+
+private:
+	double _real;
+	double _image;
+};
