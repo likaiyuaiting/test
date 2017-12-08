@@ -1,0 +1,175 @@
+#include<iostream>
+using namespace std;
+#if 0
+//单继承虚函数研究
+class Base
+{
+private:
+	int _b;
+public:
+	virtual void FunTest1()
+	{
+		cout << "Base::FunTeat1()" << endl;
+	}
+	virtual void FunTest2()
+	{
+		cout << "Base::FunTeat2()" << endl;
+	}
+};
+class Dir:public Base
+{
+private:
+	int _d;
+public:
+	virtual void FunTest1()
+	{
+		cout << "Dir::FunTest1()" << endl;
+	}
+	virtual void FunTest3()
+	{
+		cout << "Dir::FunTest3()" << endl;
+	}
+};
+typedef void(*VFP)();//VFP是一个函数指针，可以指向一个无参，无返回值的函数
+void Find_VFT(Base& b, char ch[])
+{
+	VFP * p=(VFP*)(*(int*)(&b));
+	
+	while (*p)
+	{
+		(*p)();
+		p++;
+	}
+}
+int main(void)
+{
+	Base b;
+	Dir d;
+	cout << sizeof(b) << endl;
+	cout << sizeof(d) << endl;
+	Find_VFT(b, "Base VFT");
+	printf("\n");
+	printf("\n");
+	Find_VFT(d, "Dir VFT");
+	printf("\n");
+
+	return 0;
+}
+
+/*
+
+结论：
+1，对于单继承方式，子类对象先将父类对象的虚函数表继承下来。（注意是另开辟空间存放虚表，由子类和父类虚表地址不同可以看出）
+2，当子类中存在对父类中的虚函数进行重写的话，虚表中，被重写的虚函数由新的函数代替（只替换子类的，父类的没有变）
+3，虚表中函数的顺序严格按照定义时的顺序存放。可以打印中看出这一点。
+4，虚表地址在类的模型中前4个字节中存放，我们拿到该数据的方法（*（int*））（&对象名），但是这样拿出来的是一个整形数据，我们还要对这个数据强转，类型为父类对象第一个虚函数同样的指针（因为虚表中第一个地址为父类第一个虚函数地址），强转后，对该函数指针调用，将调用到虚表中的第一个虚函数。如例程序中的函数原型为 void Find_VFT(Base & b,char ch[]).
+5.当我们定义的虚函数不是一样的（返回值类型，参数列表）时，在用指针调用时，要做对应的强转，不然可能调用出错。
+6，虚表最后有4个字节的0000 0000做结束标志。
+
+*/
+
+#endif
+#if 1
+//多继承虚函数研究
+class Base1
+{
+private:
+	int _b1;
+public:
+	virtual void FunTest1()
+	{
+		cout << "Base1::FunTeat1()" << endl;
+	}
+	virtual void FunTest2()
+	{
+		cout << "Base1::FunTeat2()" << endl;
+	}
+};
+
+class Base2
+{
+private:
+	int _b2;
+public:
+	virtual void FunTest3()
+	{
+		cout << "Base2::FunTeat3()" << endl;
+	}
+	virtual void FunTest4()
+	{
+		cout << "Base2::FunTeat4()" << endl;
+	}
+	virtual void FunTest5()
+	{
+		cout << "Base2::FunTeat5()" << endl;
+	}
+};
+
+class Dir :public Base1,public Base2
+{
+private:
+	int _d;
+public:
+	virtual void FunTest1()
+	{
+		cout << "Dir::FunTest1()" << endl;
+	}
+	virtual void FunTest3()
+	{
+		cout << "Dir::FunTest3()" << endl;
+	}
+	virtual void FunTest6()
+	{
+		cout << "Dir::FunTest6()" << endl;
+	}
+
+};
+
+
+typedef void(*VFP)();//VFP是一个函数指针，可以指向一个无参，无返回值的函数
+void Find_VFT(Base1& b, char ch[])
+{
+	VFP * p = (VFP*)(*(int*)(&b));
+
+	while (*p)
+	{
+		(*p)();
+		p++;
+	}
+}
+void Find_VFT(Base2& b, char ch[])
+{
+	VFP * p = (VFP*)(*(int*)(&b));
+
+	while (*p)
+	{
+		(*p)();
+		p++;
+	}
+}
+int main(void)
+{
+	Base1 b1;
+	Base2 b2;
+	Dir d;
+	cout << sizeof(b1) << endl;
+	cout << sizeof(b2) << endl;
+	cout << sizeof(d) << endl;
+	Base1& db1 = d;
+	Base2& db2 = d;
+	Find_VFT(db1, "Base1_VFT:");
+	printf("\n");
+	printf("\n");
+	Find_VFT(db2, "Base1_VFT:");
+	printf("\n");
+	printf("\n");
+
+	return 0;
+}
+/*
+结论：
+1，多继承中虚函数表要维持多个。
+2，单继承中的结论这里同样可以用。
+3，如果子类中有单独的虚函数，则该虚函数的地址放在继承的第一个父类虚函数表中。且放在其所有虚函数的地址之后，顺序同样满足定义时的顺序存放。
+*/
+#endif
