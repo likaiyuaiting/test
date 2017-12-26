@@ -1,0 +1,14 @@
+#include<stdio.h>
+#include<stdlib.h>
+int main(void)
+{
+	int i,f0=1,f1=1;
+	for (i = 1; i <= 20; i++)
+	{
+		printf("%d/%-7d", f0,f1);
+		f0 += f1;
+		f1 = f0 - f1;
+	}
+	system("pause");
+	return 0;
+}
