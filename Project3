@@ -1,0 +1,603 @@
+
+#include <stdio.h>
+#include <malloc.h>
+#include <string.h>
+#include <stdlib.h>
+
+	int n;
+
+	typedef struct _Address_List
+	{
+		char name[30];            //名字
+		char num[30];            //学号
+		char mathScore[20];        //数学成绩 
+		char phyScore[30];            //物理成绩 
+		char engScore[30];        //英语成绩 
+		struct _Address_List *next;
+	}address_List;
+#define LEN sizeof(address_List)
+
+	address_List *Release(address_List *head);
+
+	//创建一个学生成绩管理系统
+	address_List *Create(void)
+	{
+		address_List *head, *p1, *p2;
+		char name[30];
+		n = 0;
+		p1 = (address_List *)malloc(LEN);
+		p2 = p1;
+		printf("请输入学生成绩管理的内容！\n姓名输入为0时表示创建完毕！\n");
+		printf("请输入姓名：");
+	    scanf_s("%s",name);
+		if (strcmp(name, "0") != 0)
+		{
+			strcpy_s(p1->name, name);
+			printf("请输入学号：");
+			gets_s(p1->num);
+			printf("请输入数学成绩：");
+			gets(p1->mathScore);
+			printf("请输入物理成绩：");
+			gets(p1->phyScore);
+			printf("请输入英语成绩：");
+			gets(p1->engScore);
+			head = NULL;
+			while (1)
+			{
+				n = n + 1;
+				if (n == 1)
+				{
+					head = p1;
+				}
+				else
+				{
+					p2->next = p1;
+				}
+				p2 = p1;
+				printf("请输入姓名：");
+				gets(name);
+				if (strcmp(name, "0") == 0)
+				{
+					break;
+				}
+				else
+				{
+					p1 = (address_List *)malloc(LEN);
+					strcpy(p1->name, name);
+					printf("请输入学号：");
+					gets(p1->num);
+					printf("请输入数学成绩：");
+					gets(p1->mathScore);
+					printf("请输入物理成绩：");
+					gets(p1->phyScore);
+					printf("请输入英语成绩：");
+					gets(p1->engScore);
+				}
+			}
+			p2->next = NULL;
+			return head;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	//打印整个学生成绩管理系统 
+	void print(address_List *head)
+	{
+		address_List *p;
+		if (head != NULL)
+		{
+			p = head;
+			printf("本学生成绩管理系统共有%d人；\n", n);
+			printf("---姓名---------学号----------数学成绩--------物理成绩-------------英语成绩\n");
+			printf("====================================================================\n");
+			do
+			{
+				printf("=%s\t\t", p->name);
+				printf("=%s\t\t", p->num);
+				printf("=%s\t\t", p->mathScore);
+				printf("=%s\t\t", p->phyScore);
+				printf("=%s\n", p->engScore);
+				p = p->next;
+			} while (p != NULL);
+			printf("==================================================================\n");
+		}
+		else
+		{
+			printf("学生成绩管理系统为空，无法输出！\n");
+		}
+	}
+
+	//在学生成绩管理系统插入
+	address_List *insert(address_List *head)
+	{
+		address_List *p0, *p1, *p2;
+		char name[20];
+		p1 = head;
+		printf("请输入增加的内容：\n");
+		printf("请输入姓名：");
+		gets(name);
+		if (strcpy(name, "0") == 0)
+		{
+			printf("姓名不能为0，增加失败！\n");
+			return head;
+		}
+		else
+		{
+			p0 = (address_List *)malloc(LEN);
+			strcpy(p0->name, name);
+			printf("请输入学号：");
+			gets(p1->num);
+			printf("请输入数学成绩：");
+			gets(p1->mathScore);
+			printf("请输入物理成绩：");
+			gets(p1->phyScore);
+			printf("请输入英语成绩：");
+			gets(p1->engScore);
+			n = n + 1;
+			if (head == NULL)
+			{
+				head = p0;
+				p0->next = NULL;
+				return head;
+			}
+			else
+			{
+				while (strcmp(p0->name, p1->name) > 0 && (p1->next != NULL))
+				{
+					p2 = p1;
+					p1 = p1->next;
+				}
+				if (strcmp(p0->name, p1->name) <0 || strcmp(p0->name, p1->name) == 0)
+				{
+					if (head == p1)
+					{
+						head = p0;
+					}
+					else
+					{
+						p2->next = p0;
+					}
+					p0->next = p1;
+				}
+				else
+				{
+					p1->next = p0;
+					p0->next = NULL;
+				}
+				return head;
+			}
+		}
+	}
+
+	//删除学生成绩管理系统中某个人
+	address_List *delete_txl(address_List *head)
+	{
+		address_List *p, *q;
+		char name[30];
+		if (head == NULL)
+		{
+			printf("学生成绩管理系统为空，无法删除！\n");
+			return head;
+		}
+		p = head;
+		printf("请输入需要删除的人姓名：");
+		gets(name);
+		if (strcmp(head->name, name) == 0)
+		{
+			head = head->next;
+			free(p);
+			printf("删除操作成功！\n");
+			return head;
+		}
+		else
+		{
+			q = head;
+			p = head->next;
+			while (p != NULL)
+			{
+				if (strcmp(p->name, name) == 0)
+				{
+					q->next = p->next;
+					free(p);
+					printf("删除操作成功！\n");
+					return head;
+				}
+				p = p->next;
+				q = q->next;
+			}
+		}
+	}
+
+	//显示学生成绩管理系统中某个人
+	address_List *display(address_List *head)
+	{
+		address_List *p1, *p2;
+		char name[30];
+		int m;
+		if (head == NULL)
+		{
+			printf("学生成绩管理系统为空，无法显示！\n");
+			return head;
+		}
+		p1 = head;
+		m = 0;
+		printf("请输入要显示人的姓名：");
+		gets(name);
+		while (p1 != NULL)
+		{
+			while (strcmp(p1->name, name) != 0 && p1->next != NULL)
+			{
+				p2 = p1;
+				p1 = p1->next;
+			}
+			if (strcmp(p1->name, name) == 0)
+			{
+				m++;
+				printf("%s的学生成绩如下：\n", name);
+				printf("---姓名---------学号----------数学成绩--------物理成绩-------------英语成绩\n");
+				printf("====================================================================\n");
+				printf("=%s=\t\t", p1->name);
+				printf("=%s=\t\t", p1->num);
+				printf("=%s=\t\t", p1->mathScore);
+				printf("=%s=\t\t", p1->phyScore);
+				printf("=%s=\n", p1->engScore);
+				printf("====================================================================\n");
+			}
+			p1 = p1->next;
+		}
+		if (m == 0)
+		{
+			printf("此人不在学生成绩管理系统中！\n");
+		}
+		return head;
+	}
+
+	//对学生成绩管理系统进行排序操作
+	address_List *Sort(address_List *head)
+	{
+		address_List *p1, *p2;
+		int i, j;
+		typedef struct _Address_List1
+		{
+			char name[30];            //名字
+			char num[30];            //学号
+			char mathScore[20];        //数学成绩
+			char phyScore[30];            //物理成绩
+			char engScore[30];        //英语成绩 
+		}address_List1;
+		address_List1 Sort[200];
+		address_List1 temp;
+		if (head == NULL)
+		{
+			printf("学生成绩管理系统为空，无法排序！\n");
+			return head;
+		}
+		p1 = head;
+		for (i = 0; i < n, p1 != NULL; i++)
+		{
+			strcpy(Sort[i].name, p1->name);
+			strcpy(Sort[i].num, p1->num);
+			strcpy(Sort[i].mathScore, p1->mathScore);
+			strcpy(Sort[i].phyScore, p1->phyScore);
+			strcpy(Sort[i].engScore, p1->engScore);
+			p2 = p1;
+			p1 = p1->next;
+		}
+		head = Release(head);
+		for (j = 0; j < n - 1; j++)
+		{
+			for (i = j + 1; i < n; i++)
+			{
+				if (strcmp(Sort[i].name, Sort[j].name) < 0)
+				{
+					Sort[i] = temp;
+					temp = Sort[j];
+					Sort[j] = temp;
+				}
+			}
+		}
+		p1 = (address_List *)malloc(LEN);
+		p2 = p1;
+		strcpy(p1->name, Sort[0].name);
+		strcpy(p1->num, Sort[0].num);
+		strcpy(p1->mathScore, Sort[0].mathScore);
+		strcpy(p1->phyScore, Sort[0].phyScore);
+		strcpy(p1->engScore, Sort[0].engScore);
+
+		head = p1;
+		for (i = 1; i < n; i++)
+		{
+			p1 = (address_List *)malloc(LEN);
+			strcpy(p1->name, Sort[i].name);
+			strcpy(p1->num, Sort[i].num);
+			strcpy(p1->mathScore, Sort[i].mathScore);
+			strcpy(p1->phyScore, Sort[i].phyScore);
+			strcpy(p1->engScore, Sort[i].engScore);
+
+			p2->next = p1;
+			p2 = p1;
+		}
+		p2->next = NULL;
+		printf("按姓名排序后的结果是：\n");
+		print(head);
+		return head;
+	}
+
+	//查找学生成绩管理系统中某个人
+	address_List *Search_name(address_List *head)
+	{
+		address_List *p1, *p2;
+		int m;
+		char name[30];
+		if (head == NULL)
+		{
+			printf("学生成绩管理系统为空，无法查找！\n");
+			return head;
+		}
+		p1 = head;
+		printf("**************************\n");
+		printf("****请输入要查找的姓名：**\n");
+		printf("**************************\n");
+		m = 0;
+		gets(name);
+		while (p1 != NULL)
+		{
+			while (strcmp(p1->name, name) != 0 && (p1->next != NULL))
+			{
+				p2 = p1;
+				p1 = p1->next;
+			}
+			if (strcmp(p1->name, name) == 0)
+			{
+				m++;
+				printf("你查找的内容是：\n");
+				printf("++++++++++++++++++++++++++++++++\n");
+				printf("++ %s\t%s\t%s\t%s\t%s  ++", p1->name, p1->num, p1->mathScore, p1->phyScore, p1->engScore);
+				printf("++++++++++++++++++++++++++++++++\n");
+			}
+			p1 = p1->next;
+			if (m == 0)
+			{
+				printf("你查找的姓名不在学生成绩管理系统中！\n");
+			}
+			break;
+		}
+		return head;
+	}
+
+	//释放整个学生成绩管理系统
+	address_List *Release(address_List *head)
+	{
+		address_List *p;
+		while (head != NULL)
+		{
+			p = head;
+			head = head->next;
+			free(p);
+		}
+		return head;
+	}
+
+	//保存(以文件的形式保存)
+	void save(address_List *head)
+	{
+		FILE *fp;
+		address_List *p;
+		char Filename[30];        //保存后的文件名
+		if (head == NULL)
+		{
+			printf("待保存的学生成绩管理系统为空，无法保存！\n");
+			return;
+		}
+		printf("请输入保存后的文件名：");
+		gets(Filename);
+
+		fp = fopen("Filename.txt", "w");
+		if (fp == NULL)
+		{
+			printf("无法打开文件！\n");
+			return;
+		}
+
+		p = head;
+		fprintf(fp, "姓名\t学号\t数学成绩\t物理成绩\t英语成绩\n");
+		for (; p != NULL;)
+		{
+			fprintf(fp, "姓名\t学号\t数学成绩\t物理成绩\t英语成绩", p->name, p->num, p->mathScore, p->phyScore, p->engScore);
+			p = p->next;
+		}
+		printf("保存完毕！\n");
+		fclose(fp);
+	}
+
+	//文件读出函数
+	address_List *Load(address_List *head)
+	{
+		FILE *fp;
+		char Filename[30];
+		address_List *p1, *p2;
+		printf("请输入要输出的文件名：");
+		gets(Filename);
+		fp = fopen("Filename.txt", "r");
+		if (fp == NULL)
+		{
+			printf("此学生成绩管理系统不存在，无法输出！\n");
+			return head;
+		}
+		else
+		{
+			head = Release(head);
+		}
+		p1 = (address_List *)malloc(LEN);
+		fscanf(fp, "%s%s%s%s%s", p1->name, p1->num, p1->mathScore, p1->phyScore, p1->engScore);
+		if (feof(fp) != 0)
+		{
+			printf("文件为空，无法打开！\n");
+			return head;
+		}
+		else
+		{
+			rewind(fp);
+			p2 = p1;
+			head = p1;
+			n = 0;
+			while (feof(fp) == 0)
+			{
+				fscanf(fp, "%s%s%s%s%s", p1->name, p1->num, p1->mathScore, p1->phyScore, p1->engScore);
+				if (feof(fp) != 0)
+				{
+					break;
+				}
+				p2->next = p1;
+				p2 = p1;
+				p1 = (address_List *)malloc(LEN);
+				n = n + 1;
+			}
+			p2->next = NULL;
+			p1 = head;
+			head = head->next;
+			n = n - 1;
+			free(p1);
+			print(head);
+			printf("打开完毕！\n");
+			return head;
+		}
+		fclose(fp);
+	}
+
+
+	//菜单选择函数
+	address_List *menu(address_List *head)
+	{
+		char num[10];
+		while (1)
+		{
+			printf("*******************************\n");
+			printf("*****1. 姓名查找     **********\n");
+			printf("*****2. 单个显示     **********\n");
+			printf("*****3. 增加         **********\n");
+			printf("*****4. 退出         **********\n");
+			printf("*******************************\n");
+			printf("请输入你选择的操作：");
+			gets(num);
+			switch (*num)
+			{
+			case '1':
+			{
+						head = Search_name(head);
+						print(head);
+			}
+				break;
+			case '2':
+			{
+						head = display(head);
+			}
+				break;
+			case '3':
+			{
+						head = insert(head);
+						print(head);
+			}
+				break;
+			case '4':
+				return head;
+			default:
+				printf("操作有误，此项不存在！\n");
+				break;
+			}
+			if (strcmp(num, "6") == 0)
+			{
+				break;
+			}
+		}
+		return head;
+	}
+
+	//主函数
+	int main(void)
+	{
+		address_List *head = NULL;
+		char num[10];
+		printf("*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*\n");
+		printf("*=*=*=*=*=*=*=            程序说明        *=*=*=*=*=*=*\n");
+		printf("*=*=*=*=*=*=*=    请及时保存创建完毕的学生成绩管理系统内容        *=*=*=*=*=*=*\n");
+		printf("*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*\n");
+		while (1)
+		{
+			printf("*******************************\n");
+			printf("******    1. 创建学生成绩管理系统   *******\n");
+			printf("******    2. 按名字排序    *******\n");
+			printf("******    3. 综合操作    *******\n");
+			printf("******    4. 保存        *******\n");
+			printf("******    5. 打开        *******\n");
+			printf("******    6. 删除        *******\n");
+			printf("******    7. 退出        *******\n");
+			printf("*******************************\n");
+			printf("请输入你选择的操作：");
+			gets(num);
+			switch (*num)
+			{
+			case '1':
+			{
+						if (head == NULL)
+						{
+							head = Create();
+							print(head);
+						}
+						else
+						{
+							head = Release(head);
+							head = Create();
+							print(head);
+						}
+			}
+				break;
+			case '2':
+			{
+						head = Sort(head);
+			}
+				break;
+			case '3':
+			{
+						head = menu(head);
+			}
+				break;
+			case '4':
+			{
+						save(head);
+						print(head);
+			}
+				break;
+			case '5':
+			{
+						head = Load(head);
+			}
+				break;
+			case '6':
+			{
+						head = delete_txl(head);
+						print(head);
+			}
+				break;
+			case '7':
+			{
+						head = Release(head);
+			}
+				break;
+			default:
+			{
+					   printf("操作有误，此项不存在！\n");
+			}
+				break;
+			}
+			if (strcmp(num, "7") == 0)
+			{
+				break;
+			}
+		}
+	system("pause");
+	return 0;
+}
