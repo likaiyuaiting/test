@@ -1,0 +1,27 @@
+// 猴子偷桃.cpp : 定义控制台应用程序的入口点。
+//
+
+#include "stdafx.h"
+#include<stdio.h>
+#include<stdlib.h>
+
+int sum(int n)
+{
+	int s;
+	if (n ==1)
+		s = 1;
+	else 
+		s=(sum(n - 1)+1)*2;
+	return s;
+
+}
+void main()
+{
+	int n;
+	printf("输入吃完的天数N：");
+	scanf("%d",&n);
+	printf("原来它偷了%d的桃子",sum(n));
+	system("pause");
+
+}
+
