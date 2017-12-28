@@ -1,0 +1,83 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<stdarg.h>
+
+#if 0
+int MAX(int n, ...)
+{
+	int max = 0,num=0;
+	va_list *arg;
+	va_start(arg, n);
+	for(int i = 0; i < n; i++)
+	{
+		num = va_arg(arg, int);
+		if(i==0)
+			max = num;
+		if (num>max) 
+			max = num;
+	}
+	va_end(arg);
+	return max;
+}
+int main(void)
+{
+
+	printf("%d\n",MAX(3, 6, 5, 8));
+	printf("%d\n", MAX(4, 6, 5, 8 , 9));
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int Max(int n, ...)
+{
+	int i = 0;
+	int max = 0;
+	va_list arg;
+	va_start(arg, n);
+
+	for (i = 0; i < n; i++)
+	{
+		int val = va_arg(arg, int);
+		if (i == 0)
+			max = val;
+		if (val > max)
+		{
+			max = val;
+		}
+	}
+	va_end(arg);
+	return max;
+}
+
+int main()
+{
+	int ret = Max(10, -100, -2, -3, -4, -5, -6, -7, -8, -9, -10);
+	printf("%d\n", ret);
+	getchar();
+	return 0;
+}
+#endif
+#if 1
+void reverse_string(char * string)
+{
+	char ch;
+	char *str=string;	
+	while (*str++);
+
+	//if (left == right)
+	//{
+	//	char tmp = string[left];
+	//	string[left] = string[left];
+	//	string[left] = tmp;
+	//}
+	//else  reverse_string(string + 1);
+}
+int main(void)
+{
+	char str[] = "abcdef";
+	reverse_string(str);
+	printf("%s\n",str);
+}
+
+#endif
