@@ -1,0 +1,549 @@
+#if 0
+#include <stdlib.h>
+#include <stdio.h>
+
+void main(void)
+{
+	char *s; double x; int i; long l;
+	
+	s = "  -2309.12E-15";    /* Test of atof */
+	x = atof(&s[2]);
+	printf("atof test: ASCII string: %s\tfloat:  %e\n", s, x);
+
+	s = "7.8912654773d210";  /* Test of atof */
+	x = atof(s);
+	printf("atof test: ASCII string: %s\tfloat:  %e\n", s, x);
+
+	s = "  -9885 pigs11";      /* Test of atoi */
+	i = atoi(&s[2]);
+	printf("atoi test: ASCII string: %s\t\tinteger: %d\n", s, i);
+
+	s = "98854 dollars";     /* Test of atol */
+	l = atol(s);
+	printf("atol test: ASCII string: %s\t\tlong: %ld\n", s, l);
+	system("pause");
+}
+#endif
+
+#if 0
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#include<conio.h>
+
+int size();
+double teshu();
+
+void main()
+{
+	char h;
+	int a;
+	double b;
+	do
+	{
+		printf("          简单计算器          \n");
+		printf("******************************\n");
+		printf("      请输入要进行的运算      \n");
+		printf("------------------------------\n");
+		printf("         1 四则运算           \n");
+		printf("         2 特殊运算           \n");
+		printf("         3 退出程序           \n");
+		h = getche();
+		switch (h)             /*判断用户想要进行的操作*/
+		{
+		case'1':       /*输入1则调用四则运算函数*/
+			a = size();
+			printf("结果是: %d", a);
+			break;
+		case'2':       /*输入2则调用特殊运算函数*/
+			b = teshu();
+			printf("结果是：%f", b);
+			break;
+		case'3':               /*输入3则退出程序*/
+			break;
+		}
+		printf("\n");
+	} while (h != '3');
+}
+
+
+
+
+/*定义四则（size）运算函数*/
+int size()
+{
+	char str1[10];
+	char* str = str1;
+	int arr[5] = {0};
+	int num = 0;
+	int sum = 0;
+	scanf("%s", str);
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	int n = 0;
+	while (str[i])
+	{
+		num = 0;
+		//判断输入字符是否符合格式
+		if (str[i] != '+' || str[i] != '-' || str[i] != '*' || str[i] != '/' || str[i] != '=' || str[i] != '(' || str[i] != ')' || str[0] < '0'&&str[0]>'9')
+		{
+			printf("你输入格式错误！！！\n");
+			return NULL;
+		}
+
+		//判断第一个输入的是不是数字或者'('
+		if (str[0] < '0'&&str[0]>'9' || str[0] != '(')
+		{
+			printf("你输入格式错误！！！\n");
+			return NULL;
+		}
+
+		////判断括号是否匹配
+		//while (str[k])
+		//{
+		//	if (n < 0)
+		//		break;
+		//	if (str[k] != '(')
+		//		n++;
+		//	if (str[k] != ')')
+		//		n--;
+		//	k++;
+		//}
+		//if (n)
+		//{
+		//	printf("你输入格式错误！！！\n");
+		//	return NULL;
+		//}
+
+		//判断是否会输入连续的操作符
+		if (str[i] == '+' && (str[i + 1] < '0'&&str[i + 1] > '9' || str[i] == '(')
+			|| str[i] == '-' && (str[i + 1] < '0'&&str[i + 1] > '9' || str[i + 1] > '9' || str[i] == '(')
+			|| str[i] == '*' && (str[i + 1] < '0'&&str[i + 1] > '9' || str[i + 1] > '9' || str[i] == '(')
+			|| str[i] == '/' && (str[i + 1] < '0'&&str[i + 1] > '9' || str[i + 1] > '9' || str[i] == '(')
+			|| str[i] == '='&&str[i + 1] != '\0'
+			|| str[i] == '(' &&str[i + 1] < '0'&&str[i + 1] > '9'
+			|| str[i] == ')' && (str[i + 1] >= '0'&&str[i + 1] <= '9' || str[i + 1] != '+' || str[i + 1] != '-'
+			|| str[i + 1] != '*' || str[i + 1] != '/' || str[i + 1] != '=' || str[i + 1] != ')')
+			)
+		{
+			printf("你输入格式错误！！！\n");
+			return NULL;
+		}
+	}
+	while (str)
+	{
+		int nj = 0;//对数据的访问权标记
+
+		i = 0;
+		//对括号里面的数据处理
+loop:   if (*str == '(')
+		{
+			do{
+				if (*str== '(')
+					goto loop;
+				//将输入的数据取出来
+				else if (*str >= '0'&&*str <= '9')
+				{
+					//while (str[i] >= '0'&&str[i] <= '9')
+					//{
+					//	int num = num * 10 + *str - '0';
+					//	i++;
+					//}
+
+					arr[j++] =atoi(str);
+					nj++;
+				}
+				else if (*str == '*')
+				{
+					i++;
+					if (*str == '(')
+						goto loop;
+					else if (*str >= '0'&&*str <= '9')
+					{
+						//while (str[i] >= '0'&&str[i] <= '9')
+						//{
+						//	int num = num * 10 + *str - '0';
+						//	i++;
+						//}
+
+						arr[j++] = atoi(str);
+						nj++;
+						if (nj == 2)
+						sum = arr[--j] * arr[--j];
+						else   sum *= arr[--j];	
+						nj = 0;
+					}
+				}
+				else if (*str == '/')
+				{
+					i++;
+					if (*str == '(')
+						goto loop;
+					else if (*str >= '0'&&*str <= '9')
+					{
+						//while (str[i] >= '0'&&str[i] <= '9')
+						//{
+						//	int num = num * 10 + *str - '0';
+						//	i++;
+						//}
+
+						arr[j++] = atoi(str);
+						nj++;
+						if (nj == 2)
+							sum = arr[--j] * arr[--j];
+						else   sum /= arr[--j];
+						nj = 0;
+					}
+				}
+				else if (*str == '+')
+				{
+					i++;
+					if (*str == '(')
+						goto loop;
+					else if (*str >= '0'&&*str <= '9')
+					{
+						//while (str[i] >= '0'&&str[i] <= '9')
+						//{
+						//	int num = num * 10 + *str - '0';
+						//	i++;
+						//}
+
+						arr[j++] = atoi(str);
+						nj++;
+						if (nj == 2)
+							sum = arr[--j] * arr[--j];
+						else   sum += arr[--j];
+						nj = 0;
+					}
+				}
+				else if (*str == '-')
+				{
+					i++;
+					if (*str == '(')
+						goto loop;
+					else if (*str >= '0'&&*str <= '9')
+					{
+						//while (str[i] >= '0'&&str[i] <= '9')
+						//{
+						//	int num = num * 10 + *str - '0';
+						//	i++;
+						//}
+
+						arr[j++] = atoi(str);
+						nj++;
+						if (nj == 2)
+							sum = arr[--j] * arr[--j];
+						else   sum -= arr[--j];
+						nj = 0;
+					}
+				}
+				i++;
+			} while (*str == ')');
+		}
+		else if (*str >= '0'&&*str <= '9')
+		{
+			//while (str[i] >= '0'&&str[i] <= '9')
+			//{
+			//	int num = num * 10 + *str - '0';
+			//	i++;
+			//}
+
+			arr[j++] = atoi(str);
+			nj++;
+		}
+		else if (*str == '*')
+		{
+			i++;
+			if (*str == '(')
+				goto loop;
+			else if (*str >= '0'&&*str <= '9')
+			{
+				//while (str[i] >= '0'&&str[i] <= '9')
+				//{
+				//	int num = num * 10 + *str - '0';
+				//	i++;
+				//}
+
+				arr[j++] = atoi(str);
+				nj++;
+				if (nj == 2)
+					sum = arr[--j] * arr[--j];
+				else   sum *= arr[--j];
+				nj = 0;
+			}
+		}
+		else if (*str == '/')
+		{
+			i++;
+			if (*str == '(')
+				goto loop;
+			else if (*str >= '0'&&*str <= '9')
+			{
+				//while (str[i] >= '0'&&str[i] <= '9')
+				//{
+				//	int num = num * 10 + *str - '0';
+				//	i++;
+				//}
+
+				arr[j++] = atoi(str);
+				nj++;
+				if (nj == 2)
+					sum = arr[--j] * arr[--j];
+				else   sum /= arr[--j];
+				nj = 0;
+			}
+		}
+		else if (*str == '+')
+		{
+			i++;
+			if (*str == '(')
+				goto loop;
+			else if (*str >= '0'&&*str <= '9')
+			{
+				//while (str[i] >= '0'&&str[i] <= '9')
+				//{
+				//	int num = num * 10 + *str - '0';
+				//	i++;
+				//}
+
+				arr[j++] = atoi(str);
+				nj++;
+				if (nj == 2)
+					sum = arr[--j] * arr[--j];
+				else   sum += arr[--j];
+				nj = 0;
+			}
+		}
+		else if (*str == '-')
+		{
+			i++;
+			if (*str == '(')
+				goto loop;
+			else if (*str >= '0'&&*str<= '9')
+			{
+				//while (str[i] >= '0'&&str[i] <= '9')
+				//{
+				//	int num = num * 10 + *str - '0';
+				//	i++;
+				//}
+
+				arr[j++] = atoi(str);
+				nj++;
+				if (nj == 2)
+					sum = arr[--j] * arr[--j];
+				else   sum -= arr[--j];
+				nj = 0;
+			}
+		}
+		str++;
+		//	} while (str[i] =='=');
+
+		//}
+
+
+		////将输入的数据取出来
+		//if (str[i] >= '0'&&str[i] <= '9')
+		//{
+		//	while (str[i] >= '0'&&str[i] <= '9')
+		//	{
+		//		int num = num*10+*str - '0';
+		//		str[i++];
+		//	}
+		//	arr[j++] = num;
+		//}
+
+	}
+	return num;
+}
+
+
+// /*定义四则（size）运算函数*/
+// int size()      
+//{
+//	int n, m;
+//	int c;
+//	char l;
+//	int d;
+//	do
+//	{
+//		printf("\n请输入第一个要计算的数并按Enter结束:");
+//		scanf("%d", &m);
+//		printf("\n请输入第二个要计算的数并按Enter结束:");
+//		scanf("%d", &n);
+//		printf("\n请选择运算符号[\t+\t-\t*\t/\t]:");
+//		l = getche();           /*得到运算符号*/
+//
+//		switch (l)
+//		{
+//		case'+':               /*加法运算*/
+//			c = m + n;
+//			printf("\n\n\t结果是 %d\n", c);
+//			printf("\n");
+//			break;
+//		case'-':                /*减法运算*/
+//			c = m - n;
+//			printf("\n\n\t结果是 %d\n", c);
+//			printf("\n");
+//			break;
+//		case'*':                /*乘法运算*/
+//			c = m*n;
+//			printf("\n\n\t结果是 %d\n", c);
+//			printf("\n");
+//			break;
+//		case'/':               /*除法运算*/
+//			c = m / n;
+//			printf("\n\n\t结果是 %d\n", c);
+//			printf("\n");
+//			break;
+//		}
+//
+//		for (d = 0; d <= 999999; d++)
+//		{
+//			printf("\t 是否继续?(y/n):");  /*是否继续运算*/
+//			l = getche();           /*得到输入的值*/
+//			printf("\n");
+//
+//			if (l == 'y')    /*如果得到的是y，则重复运算步骤，达到无限运算的作用*/
+//			{
+//				printf("\n请输入下一个要计算的数并按Enter结束：");
+//				scanf("%d", &n);
+//				printf("\n请选择运算符号[\t+\t-\t*\t/\t]:");
+//				l = getche();
+//				switch (l)
+//				{
+//				case'+':       /*加法运算*/
+//					c = c + n;
+//					printf("\n\n\t结果是 %d\n", c);
+//					printf("\n");
+//					break;
+//				case'-':                /*减法运算*/
+//					c = c - n;
+//					printf("\n\n\t结果是 %d\n", c);
+//					printf("\n");
+//					break;
+//				case'*':                  /*乘法运算*/
+//					c = c*n;
+//					printf("\n\n\t结果是 %d\n", c);
+//					printf("\n");
+//					break;
+//				case'/':                 /*除法运算*/
+//					c = c / n;
+//					printf("\n\n\t结果是 %d\n", c);
+//					printf("\n");
+//					break;
+//				}
+//			}
+//			else
+//			{
+//				exit(l);        /*如果得到的是n，则退出程序*/
+//			}
+//		}
+//	} while (l != 'n');
+//	return(c);                    /*返回值*/
+//}
+
+double teshu()      /*定义（teshu）特殊运算函数*/
+{
+	double y;
+	int n;
+	double m;
+	char p;
+	printf("---------请选择特殊运算类型-------\n");
+	printf(" 1 余弦     2 正弦       3 正切  4 绝对值 \n");
+	printf(" 5平方根    6 以e为底的指数      7 以10为底的对数    \n");
+	printf("\n请输入您要计算的数并按Enter结束: ");
+	scanf("%d", &m);       /*得到要进行运算的数*/
+	printf("\n请选择您要做的运算类型: ");
+	n = getche();                /*得到要做的运算*/
+	do
+	{
+		switch (n)
+		{
+		case'1':
+			y = cos(m);                /*余弦函数*/
+			printf("\n\n\t结果是: %f\n", y);
+			printf("\n");
+			break;
+		case'2':
+			y = sin(m);             /*正弦函数*/
+			printf("\n\n\t结果是: %f\n", y);
+			printf("\n");
+			break;
+		case'3':
+			y = tan(m);               /*正切函数*/
+			printf("\n\n\t结果是: %f\n", y);
+			printf("\n");
+			break;
+		case'4':
+			y = fabs(m);              /*绝对值函数*/
+			printf("\n\n\t结果是: %f\n", y);
+			printf("\n");
+			break;
+		case'5':
+			y = sqrt(m);               /*平方根函数*/
+			printf("\n\n\t结果是: %f\n", y);
+			printf("\n");
+			break;
+		case'6':
+			y = exp(m);            /*底数为e的指数函数*/
+			printf("\n\n\t结果是: %f\n", y);
+			printf("\n");
+			break;
+		case'7':
+			y = log10(m);         /*底数为10的对数函数*/
+			printf("\n\n\t结果是: %f\n", y);
+			printf("\n");
+			break;
+		}
+		printf("\n是否继续？y/n");
+		p = getche();
+		if (p == 'n')
+			exit(1);
+		return(y);          /*返回值y*/
+	} while (p == 'y');
+}
+#endif
+
+#if 1
+
+#include<stdio.h>
+#include<stdlib.h>
+
+
+int main()
+{
+	char str[10];
+	char *p=str;
+	int i;
+	gets(str);
+	for (i = 0; i < sizeof(str) / sizeof(str[0]); i++)
+	{
+		printf("%c\t", putchar(*p));
+	}
+	system("pause");
+	return 0;
+}
+
+#endif
+
+#if 0
+#include<stdio.h>
+#include<stdlib.h>
+
+void main(void)
+{
+	//FILE *stream;
+	char *p, buffer[] = "This is the line of output\n";
+	int  ch;
+
+	ch = 0;
+	/* Make standard out the stream and write to it. */
+	//stream = stdout;
+	for (p = buffer; (*p != '\0'); p++)
+		ch = putchar(*p);
+
+	system("pause");
+}
+
+#endif
