@@ -1,0 +1,397 @@
+#include<stdio.h> 
+#include<stdlib.h> 
+#include<assert.h>
+#define DateType int 
+
+typedef struct Node {
+	DateType data;
+	struct Node* next;
+}Node, *pNode;
+void InitList(pNode *head)//初始化 
+{
+	assert(head); (*head) = NULL;
+}
+pNode BuyNode(DateType e)//申请新节点
+{
+	pNode lk = (pNode)malloc(sizeof(Node));
+	if (!lk)
+		return NULL;
+	lk->data = e;
+	return lk;
+}
+void PushBack(pNode *head, DateType e)//尾插
+{
+	pNode nd, tmp; assert(head);
+	nd = BuyNode(e);
+	if (!nd)
+		return;
+	else if (*head == NULL)
+	{
+		*head = nd; nd->next = NULL;
+	}
+	else
+	{
+		tmp = *head;
+		while (tmp->next) { tmp = tmp->next; }
+		tmp->next = nd; nd->next = NULL;
+	}
+
+}
+void PopBack(pNode *head)//尾删 
+{
+	pNode tmp;
+	pNode q = NULL;
+	assert(head);
+	if (*head == NULL) return;
+	tmp = *head;
+	while (tmp->next)
+	{
+		q = tmp; tmp = tmp->next;
+	}
+	if (q != NULL)//多个节点 
+	{
+		q->next = NULL;
+		free(tmp);
+	}
+	else//一个节点 
+	{
+		free(tmp);
+		*head = NULL;
+	}
+}
+void PrintList(pNode head)//打印链表 
+{
+	pNode tmp = head;
+	while (tmp)
+	{
+		printf("%d-->", tmp->data);
+		tmp = tmp->next;
+	} printf("NULL\n");
+}
+void PushFront(pNode *head, DateType e)//头插
+{
+	pNode nd = BuyNode(e);
+	assert(head);
+	if (nd)
+	{
+		nd->next = *head;
+		*head = nd;
+	}
+}
+void PopFront(pNode *head)//头删
+{
+	pNode tmp;
+	assert(head);
+	if (!*head) return;
+	tmp = *head;
+	*head = (*head)->next;
+	free(tmp);
+}
+pNode Find(pNode head, DateType e)//找到指定元素的位置并返回,没找到返回NULL
+{
+	pNode tmp; assert(head);
+	tmp = head;
+	while (tmp->data != e)
+	{
+		tmp = tmp->next;
+		if (tmp == NULL) return NULL;
+	}
+	return tmp;
+}
+void Inster(pNode *head, pNode pos, DateType e)//指定位置插入
+{
+	pNode nd;
+	assert(head);
+	if (pos && *head)
+	{
+		nd = BuyNode(e);
+		nd->next = pos->next;
+		pos->next = nd;
+	}
+}
+void Erase(pNode *head, pNode pos)//指定位置删除 
+{
+	pNode tmp; pNode q = NULL;//q是记录tmp的前一个位置 
+	assert(head); if (*head && pos)
+	{
+		tmp = *head;
+		while (tmp != pos)
+		{
+			q = tmp;
+			tmp = tmp->next;
+		}
+		if (q != NULL)
+		{
+			q->next = tmp->next;
+			free(tmp);
+		}
+		else
+		{
+			free(tmp);
+			*head = NULL;
+		}
+
+	}
+}
+int LenList(pNode head)//链表长度
+{
+	int count = 0;
+	pNode tmp = head;
+	while (tmp)
+	{
+		tmp = tmp->next;
+		++count;
+	}
+	return count;
+}
+void Destroy(pNode *head)//销毁链表
+{
+	pNode tmp = *head;
+	pNode del = NULL;
+	while (tmp)
+	{
+		del = tmp;
+		tmp = tmp->next;
+		free(del);
+		del = NULL;
+	}
+	*head = NULL;
+}
+void deleteNotTailNode(pNode pos)//删除一个无头单链表的非尾节点
+{
+	pNode posNext = NULL;
+	assert(pos);
+	if (pos == NULL || pos->next == NULL)
+		return;
+	posNext = pos->next;
+	pos->data = posNext->data;
+	pos->next = posNext->next;
+	free(posNext);
+	posNext = NULL;
+}
+void insetNothead(pNode pos, DateType d)//在无头单链表的一个节点（头结点处也可以，但麻烦了）前插入一个节点（不能用遍历）
+{
+	pNode pnewNode = (pNode)malloc(sizeof(Node));
+	assert(pos);
+	if (pos == NULL)
+		return;
+	pnewNode->next = pos->next;
+	pnewNode->data = pos->data;
+	pos->next = pnewNode;
+	pos->data = d;
+}
+pNode yosephcircle(pNode phead, size_t num)//实现约瑟夫环算法
+{
+	int count = 0;
+	pNode pcurNext = NULL;
+	pNode pcur = NULL;
+	assert(phead);
+	if (phead == NULL || phead->next == NULL)//如果只有一个或0个元素，则不用开始
+		return NULL;
+	pcur = phead;
+	while (pcur->next)//建环
+	{
+		pcur = pcur->next;
+	}
+	pcur->next = phead;
+	pcur = phead;
+	while (pcur->next != pcur)
+	{
+		count=num-1;
+		while (--count)
+		{
+			pcur = pcur->next;
+		}
+		pcurNext = pcur->next;
+		pcur->next = pcurNext->next;
+		free(pcurNext);
+		pcurNext = NULL;
+		pcur = pcur->next;
+	}
+	pcur->next = NULL;//解环
+	return pcur;
+}
+void printlistlast(pNode head)//从后向前打印链表
+{
+	if (head)
+	{
+		printlistlast(head->next);
+		printf("%d-->",head->data);
+	}
+}
+void Destroylistlast(pNode* phead)//从后向前删除节点
+{
+	assert(phead);
+	if (*phead)
+	{
+		Destroylistlast((*phead)->next);
+		free(*phead);
+		*phead = NULL;
+	}
+}
+pNode findminNode(pNode phead)//遍历一次，找到中间节点
+{
+	pNode pslow = phead;
+	pNode pfast = phead;
+	while (pfast&&pfast->next)
+	{
+		pslow = pslow->next;
+		pfast = pfast->next->next;
+	}
+	return pslow;
+}
+
+void reverselist(pNode *phead)//链表的逆置
+{
+	pNode pcur = NULL;
+	pNode pcurNext = NULL;
+	pNode pPre = NULL;
+	assert(phead);
+	if (phead == NULL || (*phead)->next == NULL)
+		return ;
+	pPre=pcur = *phead;
+	pcurNext = pcur->next;
+	while (pcurNext)
+	{
+		pcur->next = pcurNext->next;
+		pPre = pcurNext;
+		pcurNext = pcurNext->next;
+		pPre->next = (*phead);
+		(*phead) = pPre;
+	}
+}
+
+/***********测试代码1*****************/
+void test1()
+{
+	pNode list;
+	pNode pos;
+	InitList(&list);
+	PushBack(&list, 1);
+	//1->NULL 
+	PushBack(&list,2);
+	//1->2->NULL 
+	PushBack(&list,3);
+	//1->2->3->NULL 
+	PushFront(&list,0);
+	//0->1->2->3->NULL 
+	PopFront(&list);
+	//1->2->3->NULL 
+	PrintList(list); 
+	//PopBack(&list); 
+	//PopBack(&list);
+	//1->2->NULL 
+	//PopBack(&list);
+	//1->NULL 
+	//PopBack(&list);
+	//NULL 
+	//PushFront(&list,0);
+	//0->NULL 
+	//PopFront(&list);
+	//NULL 
+	//PrintList(list); 
+	pos = Find(list, 2);
+	Inster(&list, pos, 233);
+	//1->2->233->3->NULL 
+	PrintList(list);
+	pos = Find(list, 233);
+	Erase(&list, pos);
+	//1->2->3->NULL 
+	PrintList(list); 
+	PopBack(&list);
+	PopBack(&list);
+	//1->NULL 
+	pos = Find(list,1); 
+	Erase(&list, pos);
+	//NULL 
+	PrintList(list); 
+	Destroy(&list);
+}
+/***********测试代码2*****************/
+void test2()
+{
+	pNode list;
+	pNode pos;
+	pNode q;
+	InitList(&list);
+	PushBack(&list, 1);
+	//1->NULL 
+	PushBack(&list, 2);
+	//1->2->NULL 
+	PushBack(&list, 3);
+	//1->2->3->NULL 
+	PrintList(list);
+	pos = Find(list, 2);
+	deleteNotTailNode(pos);
+	//1->3->NULL
+	PrintList(list);
+
+	insetNothead(pos,2);
+	//1->2->3->NULL 
+	PrintList(list);
+
+	PushBack(&list, 4);
+	PushBack(&list, 5);
+	PushBack(&list, 6);
+	PushBack(&list, 7);
+	PrintList(list);
+	//1->2->3->4->5->6->7->NULL 
+	q = yosephcircle(list,3);
+	//出圈时序：3--6--2--7--5--1--4
+	printf("%d\n",q->data);
+	//q = yosephcircle(list, 4);
+	//出圈时序：4--1--6--5--7--3--2
+	//printf("%d\n", q->data);
+
+	Destroy(&list);
+	PrintList(list);
+}
+/***********测试代码3*****************/
+void test3()
+{
+	pNode list;
+	//pNode pos;
+	pNode q;
+	InitList(&list);
+	PushBack(&list, 1);
+	//1->NULL 
+	PushBack(&list, 2);
+	//1->2->NULL 
+	PushBack(&list, 3);
+	//1->2->3->NULL 
+	printlistlast(list);
+	//3-->2-->1
+	printf("\n");
+
+	//遍历一次，找到中间节点（test）
+	PushBack(&list, 4);
+	PushBack(&list, 5);
+	PushBack(&list, 6);
+	PushBack(&list, 7);
+	PrintList(list);
+	//1->2->3->4->5->6->7->NULL 
+	q=findminNode(list);
+	printf("%d\n",q->data);
+	//4
+	PushBack(&list, 8);
+	PrintList(list);
+	//1->2->3->4->5->6->7->8->NULL 
+	q = findminNode(list);
+	printf("%d\n", q->data);
+	//5
+	reverselist(&list);
+	PrintList(list);
+	//8->7->6->5->4->3->2->1->NULL 
+
+	Destroylistlast(&list);
+	PrintList(list);
+
+}
+int main()
+{
+	//test1();
+	//test2();
+	test3();
+	system("pause");
+	return 0;
+}
