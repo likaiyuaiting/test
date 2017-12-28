@@ -1,0 +1,12 @@
+//判断1000年---2000年之间的闰年
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(void)
+{
+	for (int i = 1000; i <= 2000; i++)
+	if ((i % 400 == 0) && (i % 100) || (i % 4 == 0))
+		printf("%d\t", i);
+	system("pause");
+	return 0;
+}
