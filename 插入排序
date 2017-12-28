@@ -1,0 +1,35 @@
+#include<stdio.h>
+#include<stdlib.h>
+void insertion_sort(int *arr, int sz)
+{
+	int i, j, temp;
+	for (i = 1; i<sz; i++)
+	{
+		temp = arr[i];
+		j = i - 1;
+		while (j >= 0 && temp<arr[j])
+		{
+			arr[j + 1] = arr[j];
+			j--;
+		}
+		arr[j + 1] = temp;
+	}
+}
+
+int main()
+{
+	int i = 0;
+	int arr[] = { 9, 3, 4, 1, 6 };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	for (i = 0; i<n; i++)
+		printf("%d ", arr[i]);
+	printf("\n");
+	insertion_sort(arr, n);
+
+	for (i = 0; i<n; i++)
+		printf("%d ", arr[i]);
+	printf("\n");
+
+	system("pause");
+	return 0;
+}
