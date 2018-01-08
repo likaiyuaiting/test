@@ -1,0 +1,49 @@
+#include<iostream>
+using namespace std;
+#if 0
+//区间为[）型
+int BinarySearch(int*array, int size, int data)
+{
+    int left = 0;
+    int right = size;
+    int m = 0;
+    while (left < right)
+    {
+        m = left + ((right - left) >> 1);
+        if (array[m] == data)
+            return m;
+        else if (array[m] < data)
+            left = m+1;
+        else
+             right= m;
+    }
+    return -1;
+}
+#endif
+#if 1
+//区间为[]型
+int BinarySearch(int*array, int size, int data)
+{
+    int left = 0;
+    int right = size-1;
+    int m = 0;
+    while (left <= right)
+    {
+        m = left + ((right - left) >> 1);
+        if (array[m] == data)
+            return m;
+        else if (array[m] < data)
+            left = m + 1;
+        else
+            right = m-1;
+    }
+    return -1;
+}
+#endif
+int main(void)
+{
+    int array[] = {1,4,5,7,8,9,11,14};
+    int i = BinarySearch(array, sizeof(array) / sizeof(array[0]), 8);
+    printf("%d\n",i+1);
+    return 0;
+}
