@@ -1,0 +1,89 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+bool is_Brackets(char ch)
+{
+    if (ch == '(' || ch == ')' || ch == '[' || ch == ']' || ch == '{' || ch == '}')
+        return true;
+    else return false;
+}
+bool is_left_Brackets(char ch)
+{
+    if (ch == '(' || ch == '[' || ch == '{')
+        return true;
+    else return false;
+}
+int main(void)
+{
+    char str[20];
+    char ch;
+    int i = 0;
+    scanf("%s",&str);
+    //cin >> str;
+    stack<char> sta;
+    while (str[i])
+    {
+        if (!is_Brackets(str[i]))
+        {
+            ;
+        }
+        else
+        {
+            if (is_left_Brackets(str[i]))
+            {
+                sta.push(str[i]);
+            }
+            else
+            {
+                if (sta.empty())
+                {
+                    printf("左括号缺少！！！");
+                    return 0;
+                }
+                ch=sta.top();
+                switch (str[i])
+                {
+                case ')':
+                    if (ch == '(')
+                    {
+                        sta.pop();
+                        break;
+                    }   
+                    else
+                    {
+                        printf("括号不匹配！！！");
+                        return 0;
+                    }
+                case ']':
+                    if (ch == '[')
+                    {
+                        sta.pop();
+                        break;
+                    }
+
+                    else
+                    {
+                        printf("括号不匹配！！！");
+                        return 0;
+                    }
+                case '}':
+                    if (ch == '{')
+                    {
+                        sta.pop();
+                        break;
+                    }
+                    else
+                    {
+                        printf("括号不匹配！！！");
+                        return 0;
+                    }
+                }
+            }
+        }
+        i++;
+    }
+    if (sta.empty())
+        printf("括号匹配！！！");
+    else printf("右括号缺少!!!");
+    return 0;
+}
