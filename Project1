@@ -13,7 +13,7 @@ int main(void)
 	{
 		;
 	}
-	printf("我爱英语\n");
+	printf("我爱 英语\n");
 	printf("\n");
 	system("pause");
 	return 0;
