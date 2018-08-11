@@ -6,6 +6,7 @@ class Base
 {
 private:
 	int _b;
+
 public:
 	virtual void FunTest1()
 	{
